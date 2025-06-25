@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SportWeb Host Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] flex items-center justify-center min-h-screen text-white">
+
+  <!-- Ground Setup UI (Centered Box) -->
+  <div class="bg-white p-6 rounded-2xl shadow-md w-full max-w-5xl text-gray-800">
+    <h1 class="text-xl font-bold mb-4">Set Up Your Turf Profile</h1>
+
+    <!-- Basic Info -->
+    <div class="grid md:grid-cols-2 gap-4 mb-6">
+      <input type="text" placeholder="Ground / Academy Name" class="border p-2 rounded" />
+      <input type="text" placeholder="Google Maps Link or Address" class="border p-2 rounded" />
+      <input type="text" placeholder="City / Area" class="border p-2 rounded" />
+      <input type="file" class="border p-2 rounded bg-gray-50" />
+    </div>
+
+    <!-- Sports Setup -->
+    <h3 class="text-lg font-semibold mt-4 mb-2">Add Sports Offered</h3>
+    <div id="sportsContainer" class="space-y-4">
+      <!-- First row -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <select class="border p-2 rounded bg-white">
+          <option disabled selected>Select Sport</option>
+          <option>Badminton</option>
+          <option>Pickleball</option>
+          <option>Cricket</option>
+          <option>Tennis</option>
+          <option>Football</option>
+        </select>
+        <input type="text" placeholder="Price (₹/hour)" class="border p-2 rounded" />
+        <input type="text" placeholder="Available Time Slots (e.g. 6am–10am, 5pm–9pm)" class="border p-2 rounded col-span-2" />
+      </div>
+    </div>
+
+    <!-- Add More -->
+    <div class="mt-2">
+      <button onclick="addSportRow()" class="text-sm text-blue-400 underline hover:text-blue-300">+ Add Another Sport</button>
+    </div>
+
+    <!-- Submit -->
+    <div class="text-right mt-6">
+      <button onclick="publishGround()" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+        Publish Turf
+      </button>
+    </div>
+  </div>
+</body>
+
+  <script>
+  function publishGround() {
+    // This is where your backend logic will go (example shown as comment)
+    /*
+    const groundData = {
+      name: document.querySelector('input[placeholder="Ground / Academy Name"]').value,
+      address: document.querySelector('input[placeholder="Google Maps Link or Address"]').value,
+      city: document.querySelector('input[placeholder="City / Area"]').value,
+      sports: Array.from(document.querySelectorAll('#sportsContainer > div')).map(row => {
+        const selects = row.querySelectorAll('select');
+        const inputs = row.querySelectorAll('input');
+        return {
+          sport: selects[0].value,
+          price: inputs[0].value,
+          slots: inputs[1].value
+        };
+      })
+    };
+
+    // Send data to backend (example using fetch)
+    fetch('/api/publish-turf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(groundData)
+    }).then(() => {
+      window.location.href = 'turf.html'; // Redirect after backend push
+    });
+    */
+
+    // For now (before backend is connected), just redirect:
+    window.location.href = 'turf.html';
+  }
+</script>
+
+
+  <script>
+    function addSportRow() {
+      const container = document.getElementById('sportsContainer');
+
+      const row = document.createElement('div');
+      row.className = 'grid grid-cols-1 md:grid-cols-4 gap-4';
+
+      row.innerHTML = `
+        <select class="border p-2 rounded">
+          <option disabled selected>Select Sport</option>
+          <option>Badminton</option>
+          <option>Pickleball</option>
+          <option>Cricket</option>
+          <option>Tennis</option>
+          <option>Football</option>
+        </select>
+        <input type="text" placeholder="Price (₹/hour)" class="border p-2 rounded" />
+        <input type="text" placeholder="Available Time Slots (e.g. 6am–10am, 5pm–9pm)" class="border p-2 rounded col-span-2" />
+      `;
+
+      container.appendChild(row);
+    }
+
+  </script>
+</body>
+
+
+</html>

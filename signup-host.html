@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Host Signup - Sportea</title>
+<style>
+  .flip-card {
+    perspective: 1000px;
+  }
+  .flip-inner {
+    transition: transform 0.6s ease-in-out;
+    transform-style: preserve-3d;
+  }
+  .flip-card.flipped .flip-inner {
+    transform: rotateY(180deg);
+  }
+  .flip-front,
+  .flip-back {
+    backface-visibility: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  .flip-back {
+    transform: rotateY(180deg);
+  }
+</style>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-screen w-full flex flex-col md:flex-row bg-gradient-to-r from-[#0f172a] to-[#1e293b] text-slate-200">
+
+  <!-- LEFT: Benefits -->
+  <div class="w-full md:w-1/2 p-8 flex flex-col justify-center">
+    <h1 class="text-2xl md:text-3xl font-bold mb-8 text-white">Benefits of listing your ground with SportWeb</h1>
+
+    <div class="space-y-6">
+      <div class="flex gap-4 items-start">
+        <img src="qr.svg" class="w-8 h-8" />
+        <div>
+          <h2 class="font-semibold text-lg text-white">Quick Registration</h2>
+          <p class="text-sm text-slate-400">Set up your turf in minutes with just your contact and location info.</p>
+        </div>
+      </div>
+      <div class="flex gap-4 items-start">
+        <img src="fast.svg" class="w-8 h-8" />
+        <div>
+          <h2 class="font-semibold text-lg text-white">Boost your Booking Overnight</h2>
+          <p class="text-sm text-slate-400">Start receiving slot bookings within 24 hours.</p>
+        </div>
+      </div>
+      <div class="flex gap-4 items-start">
+        <img src="moniter.svg" class="w-8 h-8" />
+        <div>
+          <h2 class="font-semibold text-lg text-white">Track Revenue & Usage</h2>
+          <p class="text-sm text-slate-400">Real-time insights on earnings and active player slots.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Signup / Sign-in Card -->
+  <div class="w-full md:w-1/2 bg-[#1e293b] flex flex-col justify-center items-center p-8">
+    <div class="relative w-full max-w-sm h-[400px] flip-card">
+      <div class="flip-inner relative w-full h-full">
+
+        <!-- FRONT: Sign Up -->
+        <div class="flip-front absolute inset-0 bg-[#0f172a] text-white p-6 rounded shadow-md">
+          <div class="flex items-center justify-center mb-4">
+            <img src="logo.jpeg" class="w-6 h-6 mr-2" />
+            <h2 class="text-lg font-semibold">SportWeb GroundUp</h2>
+          </div>
+
+          <label class="block text-sm mb-2">Mobile Number</label>
+          <input type="tel" placeholder="Enter your mobile no"
+                 class="w-full border border-slate-500 bg-transparent text-white rounded px-3 py-2 mb-4 focus:outline-blue-500" />
+
+          <button class="w-full bg-blue-600 text-white rounded py-2 mb-4 hover:bg-blue-700">
+            Send OTP
+          </button>
+
+          <p class="text-sm text-center text-slate-400">
+            Already have an account?
+            <a href="#" onclick="flipCard(true)" class="text-blue-400 underline">Sign in</a>
+          </p>
+        </div>
+
+        <!-- BACK: Sign In -->
+        <div class="flip-back absolute inset-0 bg-[#0f172a] text-white p-6 rounded shadow-md">
+          <div class="flex items-center justify-center mb-4">
+            <img src="logo.jpeg" class="w-6 h-6 mr-2" />
+            <h2 class="text-lg font-semibold">DO IT YOURSELF</h2>
+          </div>
+
+          <label class="block text-sm mb-2">Mobile Number</label>
+          <input type="tel" placeholder="Enter mobile no"
+                 class="w-full border border-slate-500 bg-transparent text-white rounded px-3 py-2 mb-3" />
+
+          <label class="block text-sm mb-2">Password</label>
+          <input type="password" placeholder="Enter password"
+                 class="w-full border border-slate-500 bg-transparent text-white rounded px-3 py-2 mb-2" />
+
+          <div class="text-right text-sm mb-4">
+            <a href="#" class="text-blue-400">Forgot password?</a>
+          </div>
+
+          <button onclick="window.location.href='/account_setup-host.html'" 
+                  class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded py-2 mb-4">
+            Proceed
+          </button>
+
+          <p class="text-sm text-center text-slate-400">
+            Don’t have an account?
+            <a href="#" onclick="flipCard(false)" class="text-blue-400 underline">Sign up</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+<script>
+  function flipCard(toBack) {
+    document.querySelector('.flip-card').classList.toggle('flipped', toBack);
+  }
+</script>
+
+</body>
+</html>

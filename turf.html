@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Turf Owner Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-[#0f172a] text-white min-h-screen flex">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-[#1e293b] p-6 space-y-6">
+    <h1 class="text-2xl font-bold">Owner Console</h1>
+    <nav class="space-y-2">
+      <a href="#" class="block p-2 rounded hover:bg-[#334155]">Dashboard</a>
+      <a href="#" class="block p-2 rounded hover:bg-[#334155]">Bookings</a>
+      <a href="#" class="block p-2 rounded hover:bg-[#334155]">Manage Turf</a>
+      <a href="#" class="block p-2 rounded hover:bg-[#334155]">Revenue</a>
+      <a href="#" class="block p-2 rounded hover:bg-[#334155]">Support</a>
+    </nav>
+  </aside>
+
+  <!-- Main Dashboard Content -->
+  <main class="flex-1 p-6 overflow-auto">
+    <!-- Turf Card Overview -->
+    <section class="w-full mt-4 px-4 overflow-x-auto whitespace-nowrap space-x-2 flex">
+    <img src="sport.jpeg" class="inline-block rounded-lg" alt="banner1">
+    </section>
+
+    <!-- Analytics Section -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+      <!-- Summary Cards -->
+      <div class="bg-[#334155] p-4 rounded shadow">
+        <p class="text-sm text-gray-400">Total Revenue</p>
+        <h3 class="text-2xl font-bold">₹60,000</h3>
+      </div>
+      <div class="bg-[#334155] p-4 rounded shadow">
+        <p class="text-sm text-gray-400">This Month's Bookings</p>
+        <h3 class="text-2xl font-bold">112</h3>
+      </div>
+      <div class="bg-[#334155] p-4 rounded shadow">
+        <p class="text-sm text-gray-400">Available Slots</p>
+        <h3 class="text-2xl font-bold">6am–10am, 5pm–9pm</h3>
+      </div>
+    </section>
+
+    <!-- Charts Section -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white rounded-lg p-4 text-black">
+        <h4 class="font-semibold mb-2">Monthly Bookings Overview</h4>
+        <canvas id="monthlyChart"></canvas>
+      </div>
+      <div class="bg-white rounded-lg p-4 text-black">
+        <h4 class="font-semibold mb-2">Revenue by Sport</h4>
+        <canvas id="revenuePieChart"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <!-- Chart JS Scripts -->
+  <script>
+    new Chart(document.getElementById('monthlyChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+          label: 'Bookings',
+          data: [35, 50, 40, 60, 75, 90],
+          backgroundColor: '#3b82f6'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('revenuePieChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Badminton', 'Tennis', 'Pickleball'],
+        datasets: [{
+          data: [30000, 15000, 15000],
+          backgroundColor: ['#10b981', '#6366f1', '#f97316']
+        }]
+      },
+      options: {
+        responsive: true
+      }
+    });
+  </script>
+
+</body>
+</html>
