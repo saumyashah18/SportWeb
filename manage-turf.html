@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Turf - SportWeb</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] flex items-center justify-center min-h-screen text-white">
+  <div class="bg-white p-6 rounded-2xl shadow-md w-full max-w-5xl text-gray-800">
+    <h1 class="text-xl font-bold mb-4">Manage Your Turf Profile</h1>
+
+    <!-- Basic Info -->
+    <div class="grid md:grid-cols-2 gap-4 mb-6">
+      <input type="text" placeholder="Ground / Academy Name" value="Super Smash Court" class="border p-2 rounded" />
+      <input type="text" placeholder="Google Maps Link or Address" value="https://goo.gl/maps/example" class="border p-2 rounded" />
+      <input type="text" placeholder="City / Area" value="Mumbai" class="border p-2 rounded" />
+      <input type="file" class="border p-2 rounded bg-gray-50" multiple />
+    </div>
+
+    <!-- Sports Setup -->
+    <h3 class="text-lg font-semibold mt-4 mb-2">Edit Sports Offered</h3>
+    <div id="sportsContainer" class="space-y-6"></div>
+
+    <!-- Add More -->
+    <div class="mt-2">
+      <button onclick="addSportRow(false)" class="text-sm text-blue-500 hover:text-blue-400 underline">+ Add Another Sport</button>
+    </div>
+
+    <!-- Submit -->
+    <div class="text-right mt-6">
+      <button onclick="publishGround()" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+        Save Changes
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let sportIndex = 0;
+
+    function publishGround() {
+      const sports = Array.from(document.querySelectorAll('.sport-row')).map(row => {
+        const selects = row.querySelectorAll('select');
+        const inputs = row.querySelectorAll('input');
+        const slotInputs = row.querySelectorAll('.slot-input');
+        const imageFiles = row.querySelector('.sport-images')?.files;
+
+        return {
+          sport: selects[0].value,
+          price: inputs[0].value,
+          courts: inputs[1].value,
+          slots: Array.from(slotInputs).map(i => i.value),
+          images: imageFiles ? Array.from(imageFiles).map(f => f.name) : []
+        };
+      });
+
+      const groundData = {
+        name: document.querySelector('input[placeholder="Ground / Academy Name"]').value,
+        address: document.querySelector('input[placeholder="Google Maps Link or Address"]').value,
+        city: document.querySelector('input[placeholder="City / Area"]').value,
+        sports: sports
+      };
+
+      console.log("Updated Ground Data:", groundData);
+      alert("Turf profile saved successfully.");
+    }
+
+    function addTimeSlot(slotId) {
+      const container = document.getElementById(slotId);
+      const wrapper = document.createElement('div');
+      wrapper.className = 'flex gap-2 items-center';
+
+      wrapper.innerHTML = `
+        <input type="text" placeholder="e.g. 7:00 AM" class="slot-input border p-2 rounded w-full md:w-40" />
+        <button type="button" onclick="this.parentElement.remove()" class="text-red-500 text-sm hover:underline">Remove</button>
+      `;
+
+      container.appendChild(wrapper);
+    }
+
+    function addSportRow(isDefault = false) {
+      const container = document.getElementById('sportsContainer');
+      const row = document.createElement('div');
+      row.className = 'sport-row grid grid-cols-1 md:grid-cols-5 gap-4 relative';
+      row.setAttribute('data-index', sportIndex);
+
+      const slotId = `timeSlots-${sportIndex}`;
+
+      row.innerHTML = `
+        <select class="border p-2 rounded">
+          <option disabled selected>Select Sport</option>
+          <option>Badminton</option>
+          <option>Pickleball</option>
+          <option>Cricket</option>
+          <option>Tennis</option>
+          <option>Football</option>
+        </select>
+        <input type="text" placeholder="Price (₹/hour)" class="border p-2 rounded" />
+        <input type="number" placeholder="No. of Courts/Turfs" class="border p-2 rounded" />
+        <div class="col-span-2 space-y-2">
+          <label class="block text-sm font-semibold">Available Time Slots</label>
+          <div id="${slotId}" class="slot-container space-y-2 mb-1">
+            <div class="flex gap-2 items-center">
+              <input type="text" placeholder="e.g. 6:00 AM" class="slot-input border p-2 rounded w-full md:w-40" />
+            </div>
+          </div>
+          <button type="button" onclick="addTimeSlot('${slotId}')" class="text-sm text-blue-500 hover:text-blue-400 underline">
+            + Add Another Slot
+          </button>
+          <label class="block text-sm font-semibold mt-4">Upload Image of Court/Ground</label>
+          <input type="file" multiple accept="image/*" class="sport-images border p-2 rounded w-full bg-gray-50" />
+        </div>
+      `;
+
+      if (!isDefault) {
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = 'Remove';
+        removeBtn.type = 'button';
+        removeBtn.className = 'absolute top-0 right-0 text-red-500 text-sm hover:underline';
+        removeBtn.onclick = () => row.remove();
+        row.appendChild(removeBtn);
+      }
+
+      container.appendChild(row);
+      sportIndex++;
+    }
+
+    window.onload = () => {
+      addSportRow(true);
+    };
+  </script>
+</body>
+</html>

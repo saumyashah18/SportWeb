@@ -5,11 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SportWeb Host Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] flex items-center justify-center min-h-screen text-white">
-
-  <!-- Ground Setup UI (Centered Box) -->
   <div class="bg-white p-6 rounded-2xl shadow-md w-full max-w-5xl text-gray-800">
     <h1 class="text-xl font-bold mb-4">Set Up Your Turf Profile</h1>
 
@@ -23,25 +20,11 @@
 
     <!-- Sports Setup -->
     <h3 class="text-lg font-semibold mt-4 mb-2">Add Sports Offered</h3>
-    <div id="sportsContainer" class="space-y-4">
-      <!-- First row -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <select class="border p-2 rounded bg-white">
-          <option disabled selected>Select Sport</option>
-          <option>Badminton</option>
-          <option>Pickleball</option>
-          <option>Cricket</option>
-          <option>Tennis</option>
-          <option>Football</option>
-        </select>
-        <input type="text" placeholder="Price (₹/hour)" class="border p-2 rounded" />
-        <input type="text" placeholder="Available Time Slots (e.g. 6am–10am, 5pm–9pm)" class="border p-2 rounded col-span-2" />
-      </div>
-    </div>
+    <div id="sportsContainer" class="space-y-6"></div>
 
     <!-- Add More -->
     <div class="mt-2">
-      <button onclick="addSportRow()" class="text-sm text-blue-400 underline hover:text-blue-300">+ Add Another Sport</button>
+      <button onclick="addSportRow(false)" class="text-sm text-blue-500 hover:text-blue-400 underline">+ Add Another Sport</button>
     </div>
 
     <!-- Submit -->
@@ -51,49 +34,57 @@
       </button>
     </div>
   </div>
-</body>
 
   <script>
-  function publishGround() {
-    // This is where your backend logic will go (example shown as comment)
-    /*
-    const groundData = {
-      name: document.querySelector('input[placeholder="Ground / Academy Name"]').value,
-      address: document.querySelector('input[placeholder="Google Maps Link or Address"]').value,
-      city: document.querySelector('input[placeholder="City / Area"]').value,
-      sports: Array.from(document.querySelectorAll('#sportsContainer > div')).map(row => {
+    let sportIndex = 0;
+
+    function publishGround() {
+      const sports = Array.from(document.querySelectorAll('.sport-row')).map(row => {
         const selects = row.querySelectorAll('select');
         const inputs = row.querySelectorAll('input');
+        const slotInputs = row.querySelectorAll('.slot-input');
+        const imageFiles = row.querySelector('.sport-images')?.files;
+
         return {
           sport: selects[0].value,
           price: inputs[0].value,
-          slots: inputs[1].value
+          courts: inputs[1].value,
+          slots: Array.from(slotInputs).map(i => i.value),
+          images: imageFiles ? Array.from(imageFiles).map(f => f.name) : []
         };
-      })
-    };
+      });
 
-    // Send data to backend (example using fetch)
-    fetch('/api/publish-turf', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(groundData)
-    }).then(() => {
-      window.location.href = 'turf.html'; // Redirect after backend push
-    });
-    */
+      const groundData = {
+        name: document.querySelector('input[placeholder="Ground / Academy Name"]').value,
+        address: document.querySelector('input[placeholder="Google Maps Link or Address"]').value,
+        city: document.querySelector('input[placeholder="City / Area"]').value,
+        sports: sports
+      };
 
-    // For now (before backend is connected), just redirect:
-    window.location.href = 'turf.html';
-  }
-</script>
+      console.log("Ground Data to be published:", groundData);
+      window.location.href = 'turf.html';
+    }
 
+    function addTimeSlot(slotId) {
+      const container = document.getElementById(slotId);
+      const wrapper = document.createElement('div');
+      wrapper.className = 'flex gap-2 items-center';
 
-  <script>
-    function addSportRow() {
+      wrapper.innerHTML = `
+        <input type="text" placeholder="e.g. 7:00 AM" class="slot-input border p-2 rounded w-full md:w-40" />
+        <button type="button" onclick="this.parentElement.remove()" class="text-red-500 text-sm hover:underline">Remove</button>
+      `;
+
+      container.appendChild(wrapper);
+    }
+
+    function addSportRow(isDefault = false) {
       const container = document.getElementById('sportsContainer');
-
       const row = document.createElement('div');
-      row.className = 'grid grid-cols-1 md:grid-cols-4 gap-4';
+      row.className = 'sport-row grid grid-cols-1 md:grid-cols-5 gap-4 relative';
+      row.setAttribute('data-index', sportIndex);
+
+      const slotId = `timeSlots-${sportIndex}`;
 
       row.innerHTML = `
         <select class="border p-2 rounded">
@@ -104,15 +95,40 @@
           <option>Tennis</option>
           <option>Football</option>
         </select>
-        <input type="text" placeholder="Price (₹/hour)" class="border p-2 rounded" />
-        <input type="text" placeholder="Available Time Slots (e.g. 6am–10am, 5pm–9pm)" class="border p-2 rounded col-span-2" />
+        <input type="text" placeholder="Price (\u20B9/hour)" class="border p-2 rounded" />
+        <input type="number" placeholder="No. of Courts/Turfs" class="border p-2 rounded" />
+        <div class="col-span-2 space-y-2">
+          <label class="block text-sm font-semibold">Available Time Slots</label>
+          <div id="${slotId}" class="slot-container space-y-2 mb-1">
+            <div class="flex gap-2 items-center">
+              <input type="text" placeholder="e.g. 6:00 AM" class="slot-input border p-2 rounded w-full md:w-40" />
+            </div>
+          </div>
+          <button type="button" onclick="addTimeSlot('${slotId}')" class="text-sm text-blue-500 hover:text-blue-400 underline">
+            + Add Another Slot
+          </button>
+
+          <label class="block text-sm font-semibold mt-4">Upload Image of Court/Ground</label>
+          <input type="file" multiple accept="image/*" class="sport-images border p-2 rounded w-full bg-gray-50" />
+        </div>
       `;
 
+      if (!isDefault) {
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = 'Remove';
+        removeBtn.type = 'button';
+        removeBtn.className = 'absolute top-0 right-0 text-red-500 text-sm hover:underline';
+        removeBtn.onclick = () => row.remove();
+        row.appendChild(removeBtn);
+      }
+
       container.appendChild(row);
+      sportIndex++;
     }
 
+    window.onload = () => {
+      addSportRow(true);
+    };
   </script>
 </body>
-
-
 </html>
