@@ -1,11 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catalogue_layout</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Super Smash Court Booking</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .sport-btn.active {
+      background-color: #3b82f6;
+      color: white;
+    }
+    .date-btn.active {
+      background-color: #2563eb;
+      color: white;
+    }
+  </style>
 </head>
-<body>
-    <p> This will be the sports Catalogue_layout</p>
+<body class="bg-[#0f172a] text-white min-h-screen flex flex-col items-center">
+
+  <!-- Heading -->
+  
+  <h1 class="text-3xl font-extrabold text-blue-400 mt-6">Super Smash Court Booking</h1>
+
+  <!-- Sport Selection -->
+  <div class="flex gap-4 mt-6 px-4 mb-4">
+    <button class="sport-btn min-w-[100px] bg-[#1e293b] hover:bg-blue-600 p-4 rounded-lg flex flex-col items-center" onclick="selectSport(this)">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/badminton.png" class="w-8 h-8 mb-2"/>
+      <span class="text-sm">Pickleball</span>
+    </button>
+    <button class="sport-btn min-w-[100px] bg-[#1e293b] hover:bg-blue-600 p-4 rounded-lg flex flex-col items-center" onclick="selectSport(this)">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/cricket.png" class="w-8 h-8 mb-2"/>
+      <span class="text-sm">Box Cricket</span>
+    </button>
+    <button class="sport-btn min-w-[100px] bg-[#1e293b] hover:bg-blue-600 p-4 rounded-lg flex flex-col items-center" onclick="selectSport(this)">
+    <img src="soccer.svg" alt="White soccer ball" class="w-8 h-8 mb-2"/>
+      <span class="text-sm">Football</span>
+    </button>
+  </div>
+
+  <!-- Date Selector -->
+  <div id="dateContainer" class="flex gap-3 overflow-x-auto mb-6 px-4"></div>
+  <!-- Slot Table -->
+  <div class="w-full max-w-5xl px-4">
+    <div class="overflow-x-auto">
+      <table class="w-full text-center">
+        <thead class="bg-[#334155] text-white">
+          <tr>
+            <th class="p-3 text-sm">Time</th>
+            <th class="p-3 text-sm">Court 1</th>
+            <th class="p-3 text-sm">Court 2</th>
+            <th class="p-3 text-sm">Court 3</th>
+          </tr>
+        </thead>
+        <tbody id="slotsContainer" class="space-y-4"></tbody>
+      </table>
+    </div>
+  </div>
+
+<!-- Footer with Slots | Amount and Checkout -->
+<div class="fixed bottom-0 left-0 w-full bg-[#334155] text-white px-6 py-4 flex justify-between items-center shadow z-50">
+  <!-- Summary -->
+  <div class="flex items-center gap-4 text-sm font-medium">
+    <span>Slots: <span id="slotCount">0</span></span>
+    <div class="w-px h-5 bg-gray-400"></div>
+    <span>Amount: ₹<span id="totalAmount">0</span></span>
+  </div>
+
+  <!-- Checkout Button -->
+  <button onclick="openConfirmModal()" class="bg-rose-600 hover:bg-rose-700 text-white text-sm px-6 py-2 font-semibold">
+    Confirm Booking
+  </button>
+</div>
+
+  <!-- Confirm Booking Modal -->
+  <div id="confirmModal" class="fixed inset-0 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+    <div class="bg-[#1e293b] p-6 rounded-xl text-center max-w-md w-full">
+      <h2 class="text-lg font-bold mb-4">Confirm Your Booking</h2>
+      <p class="mb-6">Are you sure you want to confirm <span id="slotConfirmCount">0</span> slot(s) for ₹<span id="slotConfirmAmount">0</span>?</p>
+      <div class="flex justify-center gap-4">
+        <button onclick="closeConfirmModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">Cancel</button>
+        <button onclick="confirmBooking()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  function selectSport(button) {
+    document.querySelectorAll('.sport-btn').forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+  }
+
+  const dateContainer = document.getElementById("dateContainer");
+  const today = new Date();
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + i);
+    const dayNum = date.getDate();
+    const day = date.toLocaleDateString('en-US', { weekday: 'short' });
+    const month = date.toLocaleDateString('en-US', { month: 'short' });
+
+    const btn = document.createElement("button");
+    btn.className = "date-btn flex flex-col items-center px-4 py-2 rounded-lg bg-[#1e293b] hover:bg-blue-600 transition";
+    btn.innerHTML = `<span class="text-xs">${month.toUpperCase()}</span><span class="text-lg font-bold">${dayNum}</span><span class="text-xs">${day}</span>`;
+    if (i === 0) btn.classList.add('active');
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+    dateContainer.appendChild(btn);
+  }
+
+  const slotTimes = ["06:00 AM", "07:00 AM", "08:00 AM", "09:00 AM", "10:00 AM", "05:00 PM", "06:00 PM", "07:00 PM", "08:00 PM", "09:00 PM", "10:00 PM"];
+  const slotsContainer = document.getElementById("slotsContainer");
+
+  slotTimes.forEach(time => {
+    const row = document.createElement("tr");
+
+    const timeBox = `<td class="p-3"><div class="bg-[#1e293b] text-white rounded-lg py-3">${time}</div></td>`;
+    let courts = "";
+    for (let i = 0; i < 3; i++) {
+      courts += `<td class="p-3"><button onclick="toggleSlot(this)" class="bg-[#334155] hover:bg-blue-600 text-white w-full py-4 rounded-lg text-sm">₹300</button></td>`;
+    }
+
+    row.innerHTML = timeBox + courts;
+    slotsContainer.appendChild(row);
+  });
+
+  let selectedSlots = 0;
+  let totalPrice = 0;
+
+  function toggleSlot(button) {
+    const isActive = button.classList.contains('bg-green-600');
+    if (isActive) {
+      button.classList.remove('bg-green-600');
+      button.classList.add('bg-[#334155]');
+      selectedSlots--;
+      totalPrice -= 300;
+    } else {
+      button.classList.remove('bg-[#334155]');
+      button.classList.add('bg-green-600');
+      selectedSlots++;
+      totalPrice += 300;
+    }
+
+    document.getElementById("slotCount").innerText = selectedSlots;
+    document.getElementById("totalAmount").innerText = totalPrice;
+    document.getElementById("slotConfirmCount").innerText = selectedSlots;
+    document.getElementById("slotConfirmAmount").innerText = totalPrice;
+  }
+
+  function openConfirmModal() {
+    if (selectedSlots > 0) {
+      document.getElementById("confirmModal").classList.remove("hidden");
+    }
+  }
+
+  function closeConfirmModal() {
+    document.getElementById("confirmModal").classList.add("hidden");
+  }
+
+  function confirmBooking() {
+    closeConfirmModal();
+    alert("✅ Booking Confirmed!");
+    // Reset (optional)
+    document.querySelectorAll("button.bg-green-600").forEach(btn => {
+      btn.classList.remove("bg-green-600");
+      btn.classList.add("bg-[#334155]");
+    });
+    selectedSlots = 0;
+    totalPrice = 0;
+    document.getElementById("slotCount").innerText = selectedSlots;
+    document.getElementById("totalAmount").innerText = totalPrice;
+  }
+</script>
+
 </body>
 </html>

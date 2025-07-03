@@ -27,7 +27,7 @@
       </div>
 
       <!-- Filters on the RIGHT -->
-      <div class="flex flex-wrap gap-4 order-0 lg:order-none">
+      <div class="flex flex-wrap justify-center gap-6 px-4 text-sm md:text-base">
         <select class="bg-[#334155] text-white px-4 py-2 rounded focus:outline-none">
           <option disabled selected>Filter by Sport</option>
           <option>Badminton</option>
@@ -71,41 +71,6 @@
       </div>
     </div>
   </main>
-
-  <!-- Dynamic Date Buttons -->
-  <script>
-    const dateContainer = document.getElementById("dateContainer");
-    const today = new Date();
-
-    for (let i = 0; i < 10; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-
-      const day = date.toLocaleDateString("en-US", { weekday: 'short' });
-      const dayNum = date.getDate();
-      const month = date.toLocaleDateString("en-US", { month: 'short' });
-
-      const btn = document.createElement("button");
-      btn.className = `date-btn px-4 py-2 rounded-lg font-semibold text-center bg-[#334155] hover:bg-blue-600 transition`;
-      btn.innerHTML = `<div>${day.toUpperCase()}</div><div class="text-lg font-bold">${dayNum}</div><div class="text-sm">${month.toUpperCase()}</div>`;
-      btn.setAttribute('data-index', i);
-
-      if (i === 0) btn.classList.add("active");
-
-      btn.addEventListener("click", function () {
-        document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-
-        const index = this.getAttribute('data-index');
-        document.querySelectorAll('#listingContainer > div').forEach(card => {
-          const days = card.getAttribute('data-days').split(',');
-          card.classList.toggle('hidden', !days.includes(index));
-        });
-      });
-
-      dateContainer.appendChild(btn);
-    }
-  </script>
 
 </body>
 </html>
